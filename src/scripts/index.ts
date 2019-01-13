@@ -1,63 +1,72 @@
-const Lib = require('../lib');
-const lib = new Lib();
+import inquirer from 'inquirer';
+import Lib from '../lib/index';
+const l = new Lib();
 
-export const readFile = async (filepath: string): Promise<void> => {
-  try {
-    const file = await lib.readf(lib.abpath(filepath));
-    process.stdout.write(file);
-    return;
-  } catch (err) {
-    process.stdout.write(err + '\n');
-    return;
+interface interfaceConfig {
+  command: string;
+  script: Function;
+  args: any;
+}
+export class Oneliner {
+  command: string;
+  script: Function;
+  args: any;
+  cwd: string = process.cwd();
+  constructor(config: interfaceConfig) {
+    this.command = config.command;
+    this.script = config.script;
+    this.args = config.args;
   }
-};
 
-/**
- * React の Snapshot テストをつくる
- * 以下のように使うことを想定している
- * ex : find . | grep -E ".jsx$" | xargs -I {} ol {} c-btn
- */
-export const createReactSnaptestFile = async (
-  filepath: string,
-  match: string
-): Promise<void> => {
-  try {
-    const fullpath = lib.abpath(filepath);
-    const filename = lib.filename(fullpath);
-    let outputFilepath: string;
-    let componentName: string;
-    if (filename.match('.jsx')) {
-      outputFilepath = fullpath.replace(/(.*?)\.jsx/, '$1.test.jsx');
-      componentName = lib.pascalCase(filename).replace('.jsx', '');
-    } else if (filename.match('.js')) {
-      outputFilepath = fullpath.replace(/(.*?)\.js/, '$1.test.js');
-      componentName = lib.pascalCase(filename).replace('.js', '');
-    } else {
-      process.stdout.write('not target file \n');
-      return;
+  async run(): Promise<void> {
+    this.script(await this.getOption(this.args));
+  }
+
+  private async getOption(args: any): Promise<inquirer.Answers> {
+    return await inquirer.prompt(args);
+  }
+}
+
+// to be state less class
+export const Script = {
+  echo: ({ msg }: { msg: string }) => {
+    l.stdout(msg);
+  },
+  search: ({ target }: { target: string | RegExp }) => {
+    const files = l.filterFiles(target);
+    for (const f of files) {
+      l.stdout(f);
     }
-    const data = `import React from 'react';
+  },
+  createSnapshottestFileOfReact: async ({
+    match
+  }: {
+    match: string | RegExp;
+  }) => {
+    const files = l.filterFiles(/(jsx$)/);
+    for (const f of files) {
+      const data = await l.readf(f);
+      if (f.match('.test.')) {
+        continue;
+      }
+
+      if (data.match(match)) {
+        const outputFilepath: string = f.replace(/(.*?)\.(jsx$)/, '$1.test.$2');
+        const filename: string = l.getFilename(f);
+        const componentName: string = l.pascalCase(
+          filename.replace(/(.*?)\.(jsx$)/, '$1')
+        );
+        const outputData: string = `import React from 'react';
 import ${componentName} from './${filename}';
 import renderer from 'react-test-renderer';
-        
+
 it('renders correctly', () => {
   const props = {};
   const tree = renderer.create(<${componentName} {...props} />).toJSON();
   expect(tree).toMatchSnapshot();
 });`;
-
-    const file = await lib.readf(filepath);
-    const isMatch = file.match(match);
-
-    if (isMatch) {
-      console.log(filename);
-      await lib.writef(outputFilepath, data);
-      return;
-    } else {
-      process.stdout.write('not matched\n');
+        await l.writef(outputFilepath, outputData);
+      }
     }
-  } catch (err) {
-    process.stdout.write(err + '\n');
-    return;
   }
 };

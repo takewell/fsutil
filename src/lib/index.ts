@@ -1,7 +1,9 @@
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
+import shell from 'shelljs';
+import chalk from 'chalk';
 
-module.exports = class Lib {
+export default class Lib {
   /**
    * `fs.readFile` と `encoding: 'utf8'`の Promise ラッパー
    * @method
@@ -61,7 +63,7 @@ module.exports = class Lib {
    * filepath から filename を所得
    * @method
    */
-  filename(filepath: string): string {
+  getFilename(filepath: string): string {
     return path.basename(this.abpath(filepath));
   }
 
@@ -72,4 +74,20 @@ module.exports = class Lib {
   abpath(filepath: string): string {
     return path.resolve(process.cwd(), filepath);
   }
-};
+
+  filterFiles(match: string | RegExp): string[] {
+    return this.getUnderlayerFiles().filter(f => f.match(match));
+  }
+
+  getUnderlayerFiles(): string[] {
+    return shell.find(process.cwd());
+  }
+
+  stdout(msg: string | string[]): void {
+    process.stdout.write(chalk.green(msg + '\n'));
+  }
+
+  grep(match: string | RegExp, file: string) {
+    shell.grep(match, file);
+  }
+}
