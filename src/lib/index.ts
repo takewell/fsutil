@@ -75,19 +75,24 @@ export default class Lib {
     return path.resolve(process.cwd(), filepath);
   }
 
+  /**
+   * @method
+   */
   filterFiles(match: string | RegExp): string[] {
     return this.getUnderlayerFiles().filter(f => f.match(match));
   }
 
+  /**
+   * @method
+   */
   getUnderlayerFiles(): string[] {
     return shell.find(process.cwd());
   }
 
+  /**
+   * @method
+   */
   stdout(msg: string | string[]): void {
     process.stdout.write(chalk.green(msg + '\n'));
-  }
-
-  grep(match: string | RegExp, file: string) {
-    shell.grep(match, file);
   }
 }
