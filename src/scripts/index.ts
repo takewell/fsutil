@@ -68,5 +68,27 @@ it('renders correctly', () => {
         await l.writef(outputFilepath, outputData);
       }
     }
+  },
+  // ただの grep sed できはするがインターフェース重視
+  replaceElementClassName: async ({
+    targetFile,
+    fileType
+  }: {
+    targetFile: string;
+    fileType: string;
+  }) => {
+    const d: string = await l.readf(l.abpath(targetFile));
+    const classList: string[] = d.split('\n,');
+    const files = l.filterFiles(fileType);
+    for (const f of files) {
+      let data = await l.readf(f);
+      for (const c of classList) {
+        if (data.match(c)) {
+          l.stdout(f);
+          data = data.replace(c, '');
+          l.writef(f, data);
+        }
+      }
+    }
   }
 };

@@ -38,6 +38,23 @@ const config = [
           '対象となる JS or JSX ファイルのマッチ条件を文字列または正規表現(JS)で入力 (ex: React)'
       }
     ]
+  },
+  {
+    command: 'replace element class Name',
+    script: Script.replaceElementClassName,
+    args: [
+      {
+        type: 'input',
+        name: 'targetFile',
+        message:
+          'ターゲットとなる class 名を記した csv ファイルのファイルパスを入力'
+      },
+      {
+        type: 'input',
+        name: 'fileType',
+        message: '置換の対象となるファイルの拡張を入力 (ex erb, js)'
+      }
+    ]
   }
 ];
 
