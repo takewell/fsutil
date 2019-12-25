@@ -5,13 +5,13 @@
   "main": "./dist/index.js",
   "scripts": {
     "build": "tsc",
-    "watch": "tsc --watch",
+    "watch": "tsc -p . --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "takewell",
   "license": "ISC",
   "bin": {
-    "ol": "./dist/entry.js"
+    "fsu": "./dist/entry.js"
   },
   "devDependencies": {
     "typescript": "^3.2.2"

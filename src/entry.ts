@@ -55,6 +55,22 @@ const config = [
         message: '置換の対象となるファイルの拡張を入力 (ex erb, js)'
       }
     ]
+  },
+  {
+    command: 'replace -E cabab-case to camelcase',
+    script: Script.replaceCabab2camel,
+    args: [
+      {
+        type: 'input',
+        name: 'target',
+        message: 'ターゲットとなる正規表現を入力'
+      },
+      {
+        type: 'input',
+        name: 'output',
+        message: '置き換えたい正規表現'
+      }
+    ]
   }
 ];
 

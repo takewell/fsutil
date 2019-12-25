@@ -90,5 +90,25 @@ it('renders correctly', () => {
         }
       }
     }
+  },
+  replaceCabab2camel: async ({
+    target,
+    output,
+  }: {
+    target: string,
+    output: string,
+  }) => {
+    const files = l.filterFiles(/\.jsx$/);
+    const targetRegExp = new RegExp(target, 'mg');
+    for (const f of files) {
+      const data = await l.readf(f);
+      if(data.match(targetRegExp)) {
+        data.replace(targetRegExp, '$1')
+        const a = l.pascalCase(RegExp.$1);
+        const b = output.replace('$1', a);
+        const c = data.replace(targetRegExp, b);
+        await l.writef(f, c);
+      }
+    }
   }
 };
