@@ -1,6 +1,6 @@
 import inquirer from 'inquirer';
 import Lib from '../lib/index';
-const l = new Lib();
+const fsutil = new Lib();
 
 interface interfaceConfig {
   command: string;
@@ -30,12 +30,12 @@ export class Oneliner {
 // to be state less class
 export const Script = {
   echo: ({ msg }: { msg: string }) => {
-    l.stdout(msg);
+    fsutil.stdout(msg);
   },
   search: ({ target }: { target: string | RegExp }) => {
-    const files = l.filterFiles(target);
+    const files = fsutil.filterFiles(target);
     for (const f of files) {
-      l.stdout(f);
+      fsutil.stdout(f);
     }
   },
   createSnapshottestFileOfReact: async ({
@@ -43,17 +43,17 @@ export const Script = {
   }: {
     match: string | RegExp;
   }) => {
-    const files = l.filterFiles(/(jsx$)/);
+    const files = fsutil.filterFiles(/(jsx$)/);
     for (const f of files) {
-      const data = await l.readf(f);
+      const data = await fsutil.readf(f);
       if (f.match('.test.')) {
         continue;
       }
 
       if (data.match(match)) {
         const outputFilepath: string = f.replace(/(.*?)\.(jsx$)/, '$1.test.$2');
-        const filename: string = l.getFilename(f);
-        const componentName: string = l.pascalCase(
+        const filename: string = fsutil.getFilename(f);
+        const componentName: string = fsutil.pascalCase(
           filename.replace(/(.*?)\.(jsx$)/, '$1')
         );
         const outputData: string = `import React from 'react';
@@ -65,7 +65,7 @@ it('renders correctly', () => {
   const tree = renderer.create(<${componentName} {...props} />).toJSON();
   expect(tree).toMatchSnapshot();
 });`;
-        await l.writef(outputFilepath, outputData);
+        await fsutil.writef(outputFilepath, outputData);
       }
     }
   },
@@ -77,16 +77,16 @@ it('renders correctly', () => {
     targetFile: string;
     fileType: string;
   }) => {
-    const d: string = await l.readf(l.abpath(targetFile));
+    const d: string = await fsutil.readf(fsutil.abpath(targetFile));
     const classList: string[] = d.split('\n,');
-    const files = l.filterFiles(fileType);
+    const files = fsutil.filterFiles(fileType);
     for (const f of files) {
-      let data = await l.readf(f);
+      let data = await fsutil.readf(f);
       for (const c of classList) {
         if (data.match(c)) {
-          l.stdout(f);
+          fsutil.stdout(f);
           data = data.replace(c, '');
-          l.writef(f, data);
+          fsutil.writef(f, data);
         }
       }
     }
@@ -98,17 +98,19 @@ it('renders correctly', () => {
     target: string,
     output: string,
   }) => {
-    const files = l.filterFiles(/\.jsx$/);
+    const files = fsutil.filterFiles(/\.jsx$/);
     const targetRegExp = new RegExp(target, 'mg');
     for (const f of files) {
-      const data = await l.readf(f);
+      const data = await fsutil.readf(f);
       if(data.match(targetRegExp)) {
         data.replace(targetRegExp, '$1')
-        const a = l.pascalCase(RegExp.$1);
+        const a = fsutil.pascalCase(RegExp.$1);
         const b = output.replace('$1', a);
         const c = data.replace(targetRegExp, b);
-        await l.writef(f, c);
+        await fsutil.writef(f, c);
       }
     }
   }
 };
+
+module.exports = fsutil;

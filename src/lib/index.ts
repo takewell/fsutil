@@ -95,4 +95,4 @@ export default class Lib {
   stdout(msg: string | string[]): void {
     process.stdout.write(chalk.green(msg + '\n'));
   }
-}
+};
