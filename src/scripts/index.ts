@@ -1,6 +1,5 @@
 import inquirer from 'inquirer';
-import Lib from '../lib/index';
-const fsutil = new Lib();
+import fsutil from '../lib/index';
 
 interface interfaceConfig {
   command: string;
@@ -112,5 +111,3 @@ it('renders correctly', () => {
     }
   }
 };
-
-module.exports = fsutil;

@@ -3,7 +3,7 @@ import path from 'path';
 import shell from 'shelljs';
 import chalk from 'chalk';
 
-export default class Lib {
+class fsutil {
   /**
    * `fs.readFile` と `encoding: 'utf8'`の Promise ラッパー
    * @method
@@ -95,4 +95,6 @@ export default class Lib {
   stdout(msg: string | string[]): void {
     process.stdout.write(chalk.green(msg + '\n'));
   }
-};
+}
+
+export default new fsutil();
