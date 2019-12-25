@@ -40,8 +40,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var inquirer_1 = __importDefault(require("inquirer"));
-var index_1 = __importDefault(require("../lib/index"));
-var l = new index_1.default();
+var fsutil_1 = __importDefault(require("../lib/fsutil"));
 var Oneliner = /** @class */ (function () {
     function Oneliner(config) {
         this.cwd = process.cwd();
@@ -81,14 +80,14 @@ exports.Oneliner = Oneliner;
 exports.Script = {
     echo: function (_a) {
         var msg = _a.msg;
-        l.stdout(msg);
+        fsutil_1.default.stdout(msg);
     },
     search: function (_a) {
         var target = _a.target;
-        var files = l.filterFiles(target);
+        var files = fsutil_1.default.filterFiles(target);
         for (var _i = 0, files_1 = files; _i < files_1.length; _i++) {
             var f = files_1[_i];
-            l.stdout(f);
+            fsutil_1.default.stdout(f);
         }
     },
     createSnapshottestFileOfReact: function (_a) {
@@ -98,13 +97,13 @@ exports.Script = {
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        files = l.filterFiles(/(jsx$)/);
+                        files = fsutil_1.default.filterFiles(/(jsx$)/);
                         _i = 0, files_2 = files;
                         _b.label = 1;
                     case 1:
                         if (!(_i < files_2.length)) return [3 /*break*/, 5];
                         f = files_2[_i];
-                        return [4 /*yield*/, l.readf(f)];
+                        return [4 /*yield*/, fsutil_1.default.readf(f)];
                     case 2:
                         data = _b.sent();
                         if (f.match('.test.')) {
@@ -112,10 +111,10 @@ exports.Script = {
                         }
                         if (!data.match(match)) return [3 /*break*/, 4];
                         outputFilepath = f.replace(/(.*?)\.(jsx$)/, '$1.test.$2');
-                        filename = l.getFilename(f);
-                        componentName = l.pascalCase(filename.replace(/(.*?)\.(jsx$)/, '$1'));
+                        filename = fsutil_1.default.getFilename(f);
+                        componentName = fsutil_1.default.pascalCase(filename.replace(/(.*?)\.(jsx$)/, '$1'));
                         outputData = "import React from 'react';\nimport " + componentName + " from './" + filename + "';\nimport renderer from 'react-test-renderer';\n\nit('renders correctly', () => {\n  const props = {};\n  const tree = renderer.create(<" + componentName + " {...props} />).toJSON();\n  expect(tree).toMatchSnapshot();\n});";
-                        return [4 /*yield*/, l.writef(outputFilepath, outputData)];
+                        return [4 /*yield*/, fsutil_1.default.writef(outputFilepath, outputData)];
                     case 3:
                         _b.sent();
                         _b.label = 4;
@@ -134,25 +133,25 @@ exports.Script = {
             var d, classList, files, _i, files_3, f, data, _b, classList_1, c;
             return __generator(this, function (_c) {
                 switch (_c.label) {
-                    case 0: return [4 /*yield*/, l.readf(l.abpath(targetFile))];
+                    case 0: return [4 /*yield*/, fsutil_1.default.readf(fsutil_1.default.abpath(targetFile))];
                     case 1:
                         d = _c.sent();
                         classList = d.split('\n,');
-                        files = l.filterFiles(fileType);
+                        files = fsutil_1.default.filterFiles(fileType);
                         _i = 0, files_3 = files;
                         _c.label = 2;
                     case 2:
                         if (!(_i < files_3.length)) return [3 /*break*/, 5];
                         f = files_3[_i];
-                        return [4 /*yield*/, l.readf(f)];
+                        return [4 /*yield*/, fsutil_1.default.readf(f)];
                     case 3:
                         data = _c.sent();
                         for (_b = 0, classList_1 = classList; _b < classList_1.length; _b++) {
                             c = classList_1[_b];
                             if (data.match(c)) {
-                                l.stdout(f);
+                                fsutil_1.default.stdout(f);
                                 data = data.replace(c, '');
-                                l.writef(f, data);
+                                fsutil_1.default.writef(f, data);
                             }
                         }
                         _c.label = 4;
@@ -171,22 +170,22 @@ exports.Script = {
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        files = l.filterFiles(/\.jsx$/);
+                        files = fsutil_1.default.filterFiles(/\.jsx$/);
                         targetRegExp = new RegExp(target, 'mg');
                         _i = 0, files_4 = files;
                         _b.label = 1;
                     case 1:
                         if (!(_i < files_4.length)) return [3 /*break*/, 5];
                         f = files_4[_i];
-                        return [4 /*yield*/, l.readf(f)];
+                        return [4 /*yield*/, fsutil_1.default.readf(f)];
                     case 2:
                         data = _b.sent();
                         if (!data.match(targetRegExp)) return [3 /*break*/, 4];
                         data.replace(targetRegExp, '$1');
-                        a = l.pascalCase(RegExp.$1);
+                        a = fsutil_1.default.pascalCase(RegExp.$1);
                         b = output.replace('$1', a);
                         c = data.replace(targetRegExp, b);
-                        return [4 /*yield*/, l.writef(f, c)];
+                        return [4 /*yield*/, fsutil_1.default.writef(f, c)];
                     case 3:
                         _b.sent();
                         _b.label = 4;

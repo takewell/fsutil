@@ -42,14 +42,14 @@ var fs_1 = __importDefault(require("fs"));
 var path_1 = __importDefault(require("path"));
 var shelljs_1 = __importDefault(require("shelljs"));
 var chalk_1 = __importDefault(require("chalk"));
-var Lib = /** @class */ (function () {
-    function Lib() {
+var fsutil = /** @class */ (function () {
+    function fsutil() {
     }
     /**
      * `fs.readFile` と `encoding: 'utf8'`の Promise ラッパー
      * @method
      */
-    Lib.prototype.readf = function (filepath) {
+    fsutil.prototype.readf = function (filepath) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 return [2 /*return*/, new Promise(function (resolve, reject) {
@@ -64,7 +64,7 @@ var Lib = /** @class */ (function () {
      * `fs.writeFile`の Promise ラッパー
      * @method
      */
-    Lib.prototype.writef = function (filepath, data) {
+    fsutil.prototype.writef = function (filepath, data) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 return [2 /*return*/, new Promise(function (resolve, reject) {
@@ -79,7 +79,7 @@ var Lib = /** @class */ (function () {
      * キャメルケースへ変換 sampleString
      * @method
      */
-    Lib.prototype.camelCase = function (str) {
+    fsutil.prototype.camelCase = function (str) {
         str = str.charAt(0).toLowerCase() + str.slice(1);
         return str.replace(/[-_](.)/g, function (match, group1) {
             return group1.toUpperCase();
@@ -89,7 +89,7 @@ var Lib = /** @class */ (function () {
      * スネークケースへ変換 sample_string
      * @method
      */
-    Lib.prototype.snakeCase = function (str) {
+    fsutil.prototype.snakeCase = function (str) {
         var camel = this.camelCase(str);
         return camel.replace(/[A-Z]/g, function (s) {
             return '_' + s.charAt(0).toLowerCase();
@@ -99,7 +99,7 @@ var Lib = /** @class */ (function () {
      * パスカルケースへ変換 SampleString
      * @method
      */
-    Lib.prototype.pascalCase = function (str) {
+    fsutil.prototype.pascalCase = function (str) {
         var camel = this.camelCase(str);
         return camel.charAt(0).toUpperCase() + camel.slice(1);
     };
@@ -107,34 +107,34 @@ var Lib = /** @class */ (function () {
      * filepath から filename を所得
      * @method
      */
-    Lib.prototype.getFilename = function (filepath) {
+    fsutil.prototype.getFilename = function (filepath) {
         return path_1.default.basename(this.abpath(filepath));
     };
     /**
      * filepath から filename を所得
      * @method
      */
-    Lib.prototype.abpath = function (filepath) {
+    fsutil.prototype.abpath = function (filepath) {
         return path_1.default.resolve(process.cwd(), filepath);
     };
     /**
      * @method
      */
-    Lib.prototype.filterFiles = function (match) {
+    fsutil.prototype.filterFiles = function (match) {
         return this.getUnderlayerFiles().filter(function (f) { return f.match(match); });
     };
     /**
      * @method
      */
-    Lib.prototype.getUnderlayerFiles = function () {
+    fsutil.prototype.getUnderlayerFiles = function () {
         return shelljs_1.default.find(process.cwd());
     };
     /**
      * @method
      */
-    Lib.prototype.stdout = function (msg) {
+    fsutil.prototype.stdout = function (msg) {
         process.stdout.write(chalk_1.default.green(msg + '\n'));
     };
-    return Lib;
+    return fsutil;
 }());
-exports.default = Lib;
+exports.default = new fsutil();

@@ -1,5 +1,5 @@
 import inquirer from 'inquirer';
-import fsutil from '../lib/index';
+import fsutil from '../lib/fsutil';
 
 interface interfaceConfig {
   command: string;

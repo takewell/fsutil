@@ -3,7 +3,7 @@
   "version": "0.0.3",
   "private": false,
   "description": "",
-  "main": "./dist/lib/index.js",
+  "main": "./dist/lib/fsutil.js",
   "scripts": {
     "build": "tsc",
     "watch": "tsc -p . --watch",
