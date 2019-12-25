@@ -4,6 +4,11 @@
 
 # Instalation
 
+`$ npm i @takewell/fsutil`
+
+
+cli として使う場合
+
 ```$ git clone https://github.com/takewell/oneliner.git```
 
 ```$ npm i```
